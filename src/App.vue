@@ -3,6 +3,9 @@
   <div class="content">
     <router-view />
   </div>
+  <div class="footer">
+  <a href="git@github.com:schwantes2/creative5.git">github</a>
+</div>
 </div>
 </template>
 
