@@ -27,6 +27,7 @@
       <p></p></br>
       <div>
         <p>
+          <a @click="toggleUpload"><i class="far fa-image"></i></a>
           <a href="#" @click="logout"><i class="fas fa-sign-out-alt"></i></a>
         </p>
       </div>

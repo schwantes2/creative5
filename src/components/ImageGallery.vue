@@ -1,44 +1,69 @@
 <template>
-<div>
-  <div class="image" v-for="photo in photos" v-bind:key="photo._id">
-  <router-link :to="{ name: 'photo', params: { id: photo._id }}"><img :src="photo.path" /></router-link>
+<div class="ImageGallery">
+  <div class="masonry" v-for="photo in photos" v-bind:key="photo._id">
+  <div class="item">
+  <router-link :to="{ name: 'photo', params: { id: photo._id }}"><img :src="photo.chefPath" />
+    <!-- <img :src="photo.chefPath"
+      :onmouseover="setImagePath(photo.chefPath)"
+      :onmouseout="setImagePath(photo.myPath)" /></a> -->
+      <!-- <img :src="imagePath" @mouseover="setImagePath(photo.myPath)"/> -->
+  </router-link>
     <p class="photoTitle">{{photo.title}}</p>
-    <p class="photoDate">
+    <!-- <p class="photoDate">
       <span v-if="photo.user.name">{{photo.user.name}}, </span>
       {{formatDate(photo.created)}}
-    </p>
-    <p>{{photo.description}}</p>
+    </p> -->
+    <!-- <p>{{photo.description}}</p> -->
   </div>
+</div>
 </div>
 </template>
 
 <style scoped>
-.photoTitle {
-  margin: 0px;
-  font-size: 1.2em;
+img {
+    max-width: 100%;
+    height: auto;
 }
 
-.photoDate {
-  margin: 0px;
-  font-size: 0.9em;
-  font-weight: normal;
+a {
+    color: #CADAD9;
 }
 
-p {
-  margin: 0px;
+.ImageGallery{
+  text-align: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  /* column-count: 0; */
+  /* align-items: center; */
+  justify-content: center;
+}
+.masonry { /* Masonry container */
+    /* flex-wrap: wrap; */
+    flex-direction: row;
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    /* column-count: 3; */
+    align-items: center;
+    column-gap: 1em;
+    /* background-color: #072D40; */
 }
 
-.image {
-  margin: 0 0 1.5em;
-  display: inline-block;
-  width: 100%;
+.item { /* Masonry bricks or child elements */
+    background-color: #F1F1F1;
+    /* display: inline-block; */
+    margin: 10px 10px 1em;
+    width: 100%;
+    text-align: center;
+    border-radius: 1rem;
+    padding-top: 0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    max-width: 500px;
 }
 
-.image img {
-  max-width: 600px;
-  max-height: 600px;
-  image-orientation: from-image;
-}
+
 </style>
 
 <script>
@@ -49,12 +74,24 @@ export default {
   props: {
     photos: Array
   },
+  data(){
+    return{
+      imagePath: null,
+    }
+  },
   methods: {
    formatDate(date) {
      if (moment(date).diff(Date.now(), 'days') < 15)
        return moment(date).fromNow();
      else
        return moment(date).format('d MMMM YYYY');
+   },
+   setImagePath(photoPath){
+     this.imagePath = photoPath;
+   },
+   getImagePath(){
+     // this.setImagePath(photo.chefPath);
+     return this.imagePath;
    }
  }
 }

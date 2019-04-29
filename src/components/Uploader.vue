@@ -4,39 +4,22 @@
     <div class="modal-wrapper">
       <div class="modal-container">
         <div class="modal-header">
-          <h1 class="modal-title">Login</h1>
+          <h1 class="modal-title">Upload</h1>
         </div>
         <div class="modal-body">
-          <!-- <p v-if="error" class="error">{{error}}</p>
+          <p v-if="error" class="error">{{error}}</p>
           <form @submit.prevent="upload">
             <input v-model="title" placeholder="Title">
             <p></p>
             <textarea v-model="description" placeholder="Description"></textarea>
             <p></p>
-            <input type="file" name="photo" @change="fileChanged">
+            <input type="file" name="chefPhoto" @change="chefFileChanged">
+            <p></p>
+            <input type="file" name="myPhoto" @change="myFileChanged">
             <p></p>
             <button type="button" @click="close" class="pure-button">Close</button>
-            <button type="submit" class="pure-button pure-button-secondary">Upload</button> -->
-            <form @submit.prevent="login" class="pure-form pure-form-aligned">
-            <fieldset>
-              <p class="pure-form-message-inline">All fields are required.</p>
-
-              <div class="pure-control-group">
-                <label for="username">Username</label>
-                <input v-model="username" type="text" placeholder="Username">
-              </div>
-
-              <div class="pure-control-group">
-                <label for="password">Password</label>
-                <input v-model="password" type="password" placeholder="Password">
-              </div>
-
-              <div class="pure-controls">
-                <button type="submit" class="pure-button pure-button-primary">Submit</button>
-              </div>
-            </fieldset>
+            <button type="submit" class="pure-button pure-button-secondary">Upload</button>
           </form>
-          <p v-if="error" class="error">{{error}}</p>
         </div>
       </div>
     </div>
@@ -70,40 +53,34 @@ export default {
     return {
       title: '',
       description: '',
-      file: null,
+      chefFile: null,
+      myFile: null,
       error: '',
     }
   },
   methods: {
-  fileChanged(event) {
-    this.file = event.target.files[0]
+  chefFileChanged(event) {
+    this.chefFile = event.target.files[0]
+  },
+  myFileChanged(event) {
+    this.myFile = event.target.files[0]
   },
   close() {
     this.$emit('escape');
   },
-  async login() {
-    try {
-      this.error = await this.$store.dispatch("login", {
-        username: this.username,
-        password: this.password
-      });
-      if (this.error === "")
-        this.$router.push('mypage');
-    } catch (error) {
-      console.log(error);
-    }
-  },
   async upload() {
       try {
         const formData = new FormData();
-        formData.append('photo', this.file, this.file.name);
+        formData.append('chefPhoto', this.chefFile, this.chefFile.name);
+        formData.append('myPhoto', this.myFile, this.myFile.name);
         formData.append('title', this.title);
         formData.append('description', this.description);
         this.error = await this.$store.dispatch("upload", formData);
         if (!this.error) {
           this.title = '';
           this.description = '';
-          this.file = null;
+          this.chefFile = null;
+          this.myFile = null;
           this.$emit('uploadFinished');
         }
       } catch (error) {

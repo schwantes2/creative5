@@ -20,7 +20,8 @@ const photoSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User'
   },
-  path: String,
+  chefPath: String,
+  myPath: String,
   title: String,
   description: String,
   comments:[],
@@ -33,19 +34,46 @@ const photoSchema = new mongoose.Schema({
 const Photo = mongoose.model('Photo', photoSchema);
 
 // upload photo
-router.post("/", auth.verifyToken, User.verify, upload.single('photo'), async (req, res) => {
+// router.post("/", auth.verifyToken, User.verify, upload.single('photo'), async (req, res) => {
+//   // check parameters
+//   if (!req.file)
+//     return res.status(400).send({
+//       message: "Must upload a file."
+//     });
+//
+//   const photo = new Photo({
+//     user: req.user,
+//     path: "/images/" + req.file.filename,
+//     title: req.body.title,
+//     description: req.body.description,
+//   });
+//   try {
+//     await photo.save();
+//     return res.sendStatus(200);
+//   } catch (error) {
+//     console.log(error);
+//     return res.sendStatus(500);
+//   }
+// });
+// upload photo
+router.post("/", auth.verifyToken, User.verify, upload.any(), async (req, res) => {
   // check parameters
-  if (!req.file)
+  // console.log(req.files);
+  // console.log(req.files[0]);
+  // console.log(req.files['chefPhoto']);
+  if (!req.files)
     return res.status(400).send({
-      message: "Must upload a file."
+      message: "Must upload files."
     });
 
   const photo = new Photo({
     user: req.user,
-    path: "/images/" + req.file.filename,
+    chefPath: "/images/" + req.files[0].filename,
+    myPath: "/images/" + req.files[1].filename,
     title: req.body.title,
     description: req.body.description,
   });
+
   try {
     await photo.save();
     return res.sendStatus(200);

@@ -1,25 +1,7 @@
 <template>
 <div class="main">
-  <div class="fixed-top">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/">TS</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a @click="toggleUpload" class="pure-button">Login </a>
-      <!-- <a href="#" @click="logout" class="pure-button">Register </a> -->
-      <router-link to="/register" class="pure-button">Register</router-link> or
-      <!-- <router-link to="/uploader" class="pure-button">Login</router-link> -->
-    </li>
-  </ul>
-  <escape-event @escape="escape"></escape-event>
-  <uploader :show="show" @escape="escape" @upload-finished="uploadFinished" />
-</nav>
-</div>
-
-  <img :src="getImgUrl(pic)" v-bind:alt="pic">
+      <image-gallery :photos="photos" />
+  <!-- <img :src="getImgUrl(pic)" v-bind:alt="pic"> -->
   <!-- <div>
     <div v-if="user">
       <div class="header">
@@ -64,18 +46,20 @@
 <script>
 import EscapeEvent from '@/components/EscapeEvent.vue'
 import Uploader from '@/components/Uploader.vue'
+import ImageGallery from '@/components/ImageGallery.vue'
 
 export default {
   name: 'main',
   components: {
     EscapeEvent,
     Uploader,
+    ImageGallery,
   },
   data() {
     return {
       window: {
-        width: 0,
-        height: 0
+        width: 10,
+        height: 10
       },
       url:"",
       pic:"",
@@ -102,13 +86,14 @@ export default {
   methods: {
     handleResize() {
       this.window.width = window.innerWidth;
-      this.window.height = window.innerHeight;
+      this.window.height = window.innerHeight -1;
     },
     getURL(){
       this.url = "https://picsum.photos/" + this.window.width + "/" + this.window.height +"/?random";
     },
     getImgUrl(pet) {
-      return "https://picsum.photos/"+this.window.width+"/"+this.window.height+"/?random"
+       return "https://picsum.photos/"+this.window.width+"/"+this.window.height+"/?random";
+      // return "https://picsum.photos/"+2500+"/"+1500;
     },
     async logout() {
       try {

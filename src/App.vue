@@ -1,16 +1,50 @@
 <template>
-<div id="app" class="app">
+<div id="app" class="app" v-bind:style="{ backgroundImage: 'url(' + getImgUrl() + ')' }">
+<link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
+<div class="fixed-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="/">TS</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <!-- <a @click="toggleUpload" class="pure-button">Login </a> -->
+      <!-- <a href="#" @click="logout" class="pure-button">Register </a> -->
+      <a href="/"> Culinary </a>
+      <!-- <router-link to="/login" class="pure-button">Login</router-link> -->
+      <!-- <router-link to="/register" class="pure-button">Register</router-link> -->
+      <!-- <router-link to="/uploader" class="pure-button">Login</router-link> -->
+    </li>
+  </ul>
+  <!-- <escape-event @escape="escape"></escape-event> -->
+  <!-- <uploader :show="show" @escape="escape" @upload-finished="uploadFinished" /> -->
+</nav>
+</div>
   <div class="content">
     <router-view />
   </div>
-  <div class="footer">
-  <a href="git@github.com:schwantes2/creative5.git">github</a>
-</div>
 </div>
 </template>
 
 <style>
 /* NAVIGATION BAR*/
+.content {
+  margin: 50px auto;
+  display: inline-block;
+  align-content: center;
+  height: 100%;
+}
+
+.nav-item a{
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.5rem;
+  color: white;
+  text-decoration: none;
+}
+.nav-item a:hover{
+  color: grey;
+}
 
 .navbar-brand {
     display: inline-block;
@@ -85,97 +119,48 @@
   font-size: 18px;
   display: flex;
   min-height: 100%;
+  background-attachment:fixed;
+  /* background-color: #F1F1F1; */
 }
 
 
-
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-  /* https://css-tricks.com/box-sizing/ */
-}
-
-.error {
-  color: #F2385A;
-}
-
-.pure-button-primary {
-  background-color: #36B1BF;
-}
-
-/* Modals */
-.modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, .5);
-  display: table;
-  transition: opacity .3s ease;
-}
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.modal-container {
-  width: 500px;
-  margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-  transition: all .3s ease;
-  font-family: Helvetica, Arial, sans-serif;
-}
-
-.modal-header h1 {
-  margin-bottom: 30px;
-  font-size: 1.5em;
-}
-
-.modal-body {
-  margin: 0;
-}
-
-.modal-body input {
-  margin-bottom: 20px;
-  height: 30px;
-}
-
-.modal-footer {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.modal-default-button {
-  float: right;
-}
-
-/*
-  * The following styles are auto-applied to elements with
-  * transition="modal" when their visibility is toggled
-  * by Vue.js.
-  *
-  * You can easily play with the modal transition by editing
-  * these styles.
-  */
-.modal-enter {
-  opacity: 0;
-}
-
-.modal-leave-active {
-  opacity: 0;
-}
-
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
 </style>
+
+<script>
+
+export default {
+  name: 'app',
+  components: {
+  },
+  data() {
+    return {
+      window: {
+        width: 10,
+        height: 10
+      },
+      url:"",
+      pic:"",
+    }
+  },
+  computed: {
+
+  },
+  async created() {
+    window.addEventListener('resize', this.handleResize)
+    this.handleResize();
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.handleResize)
+  },
+  methods: {
+    handleResize() {
+      this.window.width = window.innerWidth;
+      this.window.height = window.innerHeight;
+    },
+    getImgUrl() {
+       return "https://picsum.photos/"+this.window.width+"/"+this.window.height+"/?random";
+      // return "https://picsum.photos/"+2500+"/"+1500;
+    },
+  }
+}
+</script>
