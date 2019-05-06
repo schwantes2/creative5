@@ -76,7 +76,7 @@ export default {
   },
   async created() {
     await this.$store.dispatch("getUser");
-    await this.$store.dispatch("getMyPhotos");
+    await this.$store.dispatch("getAllPhotos");
     window.addEventListener('resize', this.handleResize)
     this.handleResize();
   },

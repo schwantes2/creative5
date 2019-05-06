@@ -1,23 +1,23 @@
 <template>
 <div>
-  <div class="fixed-top">
+  <!-- <div class="fixed-top">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="/">TS</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <ul class="navbar-nav">
-    <li class="nav-item">
+    <li class="nav-item"> -->
       <!-- <a @click="toggleUpload" class="pure-button">Login </a> -->
       <!-- <a href="#" @click="logout" class="pure-button">Register </a> -->
       <!-- <router-link to="/register" class="pure-button">Register</router-link> or -->
       <!-- <router-link to="/uploader" class="pure-button">Login</router-link> -->
-    </li>
+    <!-- </li>
   </ul>
   <escape-event @escape="escape"></escape-event>
   <uploader :show="show" @escape="escape" @upload-finished="uploadFinished" />
   </nav>
-  </div>
+  </div> -->
   <div v-if="user">
     <div class="header">
     <p></p></br>
@@ -28,7 +28,7 @@
       <div>
         <p>
           <a @click="toggleUpload"><i class="far fa-image"></i></a>
-          <a href="#" @click="logout"><i class="fas fa-sign-out-alt"></i></a>
+          <a href="/" @click="logout"><i class="fas fa-sign-out-alt"></i></a>
         </p>
       </div>
     </div>
@@ -36,11 +36,11 @@
     <uploader :show="show" @escape="escape" @upload-finished="uploadFinished" />
     <image-gallery :photos="photos" />
   </div>
-  <div v-else>
+  <!-- <div v-else>
     <p>If you would like to upload photos, please register for an account or login.</p>
     <router-link to="/register" class="pure-button">Register</router-link> or
     <router-link to="/login" class="pure-button">Login</router-link>
-  </div>
+  </div> -->
 </div>
 </template>
 
