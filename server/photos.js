@@ -20,7 +20,7 @@ const photoSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'User'
   },
-  chefPath: String,
+  // chefPath: String,
   myPath: String,
   title: String,
   description: String,
@@ -56,20 +56,50 @@ const Photo = mongoose.model('Photo', photoSchema);
 //   }
 // });
 // upload photo
+
+//posts two for chef and my photo
+// router.post("/", auth.verifyToken, User.verify, upload.any(), async (req, res) => {
+//   // check parameters
+//   // console.log(req.files);
+//   // console.log(req.files[0]);
+//   // console.log(req.files['chefPhoto']);
+//   if (!req.files)
+//     return res.status(400).send({
+//       message: "Must upload files."
+//     });
+//
+//   const photo = new Photo({
+//     user: req.user,
+//     // chefPath: "/images/" + req.files[0].filename,
+//     myPath: "/images/" + req.files[1].filename,
+//     title: req.body.title,
+//     description: req.body.description,
+//   });
+//
+//   try {
+//     await photo.save();
+//     return res.sendStatus(200);
+//   } catch (error) {
+//     console.log(error);
+//     return res.sendStatus(500);
+//   }
+// });
+
 router.post("/", auth.verifyToken, User.verify, upload.any(), async (req, res) => {
   // check parameters
+  // console.log(req.file);
   // console.log(req.files);
   // console.log(req.files[0]);
   // console.log(req.files['chefPhoto']);
   if (!req.files)
     return res.status(400).send({
-      message: "Must upload files."
+      message: "Must upload file."
     });
 
   const photo = new Photo({
     user: req.user,
-    chefPath: "/images/" + req.files[0].filename,
-    myPath: "/images/" + req.files[1].filename,
+    // chefPath: "/images/" + req.files[0].filename,
+    myPath: "/images/" + req.files[0].filename,
     title: req.body.title,
     description: req.body.description,
   });
@@ -119,7 +149,7 @@ router.get("/:id", async (req, res) => {
   try {
     let photo = await Photo.findOne({
         _id: req.params.id
-    });
+    }).populate('user');
     return res.send(photo);
   } catch (error) {
     console.log(error);
@@ -138,14 +168,15 @@ router.get("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
-
+    console.log(req.body);
+    
     let photo = await Photo.findOne({
         _id: req.params.id
     }).populate('user');
 
     photo.comments.push({
-      name: req.body.addedName,
-      comment: req.body.addedComment,
+      name: req.body.name,
+      comment: req.body.comment,
       // time: moment().format('MMMM Do YYYY'),
     });
 

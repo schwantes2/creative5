@@ -96,8 +96,6 @@ export default new Vuex.Store({
     async addComment(context, data){
       try {
         console.log(data);
-        console.log(data.id);
-        console.log(data.addedComment);
         await axios.put('/api/photos/'+ data.id, data);
         return "";
       } catch (error) {

@@ -2,7 +2,9 @@
 <div class="ImageGallery">
   <div class="masonry" v-for="photo in photos" v-bind:key="photo._id">
   <div class="item">
-  <router-link :to="{ name: 'photo', params: { id: photo._id }}"><img :src="photo.chefPath" />
+  <!-- <router-link :to="{ name: 'photo', params: { id: photo._id }}"><img :src="photo.chefPath" /> -->
+  <router-link :to="{ name: 'photo', params: { id: photo._id }}"><img :src="photo.myPath" />
+
     <!-- <img :src="photo.chefPath"
       :onmouseover="setImagePath(photo.chefPath)"
       :onmouseout="setImagePath(photo.myPath)" /></a> -->
@@ -23,6 +25,7 @@
 img {
     max-width: 100%;
     height: auto;
+    border-radius: 0.5rem;
 }
 
 a {

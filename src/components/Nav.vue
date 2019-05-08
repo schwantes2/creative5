@@ -1,65 +1,134 @@
 <template>
-<!-- <div id="app" class="app" v-bind:style="{ backgroundImage: 'url('+ getImgUrl() +')'}"> -->
-<div id="app" class="app">
-<link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
-<div class="fixed-top">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="/">TS</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <!-- <a @click="toggleUpload" class="pure-button">Login </a> -->
-      <!-- <a href="#" @click="logout" class="pure-button">Register </a> -->
-      <a href="/"> Culinary </a>
-    </li>
-
-      <!-- <router-link to="/login" class="pure-button">Login</router-link> -->
-      <!-- <router-link to="/register" class="pure-button">Register</router-link> -->
-      <!-- <router-link to="/uploader" class="pure-button">Login</router-link> -->
-    </li>
-  </ul>
-  <ul class="navbar-nav ml-auto">
-    <div v-if="user">
-      <ul class="navbar-nav ml-auto">
+<div class="Nav">
+  <link href="https://fonts.googleapis.com/css?family=Dancing+Script" rel="stylesheet">
+  <div class="fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">TS</a>
+      <ul class="navbar-nav">
         <li class="nav-item">
-          <a href="/mypage"> {{user.name}} </a>
+          <a href="/"> Culinary </a>
         </li>
-        <!-- <li class="nav-item"> -->
-          <!-- <a href="/" @click="logout"><i class="fas fa-sign-out-alt"></i></a> -->
-        <!-- </li> -->
-      </ul>
-    </div>
-    <div v-else>
-      <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <router-link to="/login"> Login </router-link>
-      </li>
-      <li class="nav-item">
-        <router-link to="/register"> Register </router-link>
-      </li>
-      </ul>
-    </div>
-          </ul>
-  <!-- <escape-event @escape="escape"></escape-event> -->
-  <!-- <uploader :show="show" @escape="escape" @upload-finished="uploadFinished" /> -->
-</nav>
-</div>
-  <div class="content">
-    <router-view />
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <div v-if="user">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a href="/mypage"> {{user.name}} </a>
+          </li>
+          <li class="nav-item">
+            <a @click="toggleUpload"><i class="far fa-image"></i></a>
+          </li>
+          <li class="nav-item">
+            <a href="/" @click="logout"><i class="fas fa-sign-out-alt"></i></a>
+          </li>
+        </ul>
+      </div>
+      <div v-else>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a @click="toggleLogin"> Login </a>
+          </li>
+          <li class="nav-item">
+            <a @click="toggleRegister"> Register </a>
+          </li>
+        </ul>
+      </div>
+    </ul>
+    <escape-event @escape="escape"></escape-event>
+    <login :show="showLogin" @escape="escape" @loginFinished="loginFinished" />
+    <register :show="showRegister" @escape="escape" @registerFinished="registerFinished" />
+    <uploader :show="showUpload" @escape="escape" @uploadFinished="uploadFinished" />
+    </nav>
   </div>
 </div>
 </template>
 
-<style>
-/* NAVIGATION BAR*/
-.content {
-  margin: 50px auto;
-  display: inline-block;
-  align-content: center;
-  height: 100%;
+<script>
+import EscapeEvent from '@/components/EscapeEvent.vue'
+import Login from '@/components/Login.vue'
+import Register from '@/components/Register.vue'
+import Uploader from '@/components/Uploader.vue'
+
+export default {
+  name: 'Nav',
+  components: {
+    EscapeEvent,
+    Login,
+    Register,
+    Uploader,
+  },
+  data() {
+    return {
+      window: {
+        width: 10,
+        height: 10
+      },
+      url:"",
+      pic:"",
+      showLogin: false,
+      showRegister: false,
+      showUpload: false,
+    }
+  },
+  computed: {
+    user() {
+      return this.$store.state.user;
+    },
+  },
+  async created() {
+    await this.$store.dispatch("getUser");
+    await this.$store.dispatch("getMyPhotos");
+    window.addEventListener('resize', this.handleResize)
+    this.handleResize();
+  },
+  destroyed() {
+    window.removeEventListener('resize', this.handleResize)
+  },
+  methods: {
+    handleResize() {
+      this.window.width = window.innerWidth;
+      this.window.height = window.innerHeight;
+    },
+    getImgUrl() {
+       return "https://picsum.photos/"+this.window.width+"/"+this.window.height+"/?random";
+      // return "https://picsum.photos/"+2500+"/"+1500;
+    },
+    async logout() {
+      try {
+        this.error = await this.$store.dispatch("logout");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    escape() {
+        this.showLogin = false;
+        this.showRegister = false;
+        this.showUpload = false;
+    },
+    toggleLogin() {
+      this.showLogin = true;
+    },
+    loginFinished() {
+       this.showLogin = false;
+    },
+    toggleRegister() {
+      this.showRegister = true;
+    },
+    registerFinished() {
+       this.showRegister = false;
+    },
+    toggleUpload() {
+      this.showUpload = true;
+    },
+    uploadFinished(){
+      this.showUpload = false;
+    },
+  },
 }
+</script>
+
+<style scoped>
+/* NAVIGATION BAR*/
 
 .nav-item a{
   font-family: 'Dancing Script', cursive;
@@ -136,162 +205,17 @@
 
 /*End NAVIGATION BAR */
 
-/* https://color.adobe.com/Ventana-Azul-color-theme-2159606/?showPublished=true */
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  font-size: 18px;
+.header {
   display: flex;
-  min-height: 100%;
-  /* background-attachment:fixed; */
-  /* background-color: #F1F1F1; */
 }
 
-body {
-  height: 100vh;
+.header a {
+  padding-left: 50px;
+  color: #222;
+  font-size: 2em;
 }
 
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-  /* https://css-tricks.com/box-sizing/ */
+.header svg {
+  margin-top: 12px;
 }
-
-.error {
-  color: #F2385A;
-}
-
-.pure-button-primary {
-  background-color: #36B1BF;
-}
-
-/* Modals */
-.modal-mask {
-  position: fixed;
-  z-index: 9998;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, .5);
-  display: table;
-  transition: opacity .3s ease;
-}
-
-.modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
-}
-
-.modal-container {
-  width: 500px;
-  margin: 0px auto;
-  padding: 20px 30px;
-  background-color: #fff;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
-  transition: all .3s ease;
-  font-family: Helvetica, Arial, sans-serif;
-}
-
-.modal-header h1 {
-  margin-bottom: 30px;
-  font-size: 1.5em;
-}
-
-.modal-body {
-  margin: 0;
-}
-
-.modal-body input {
-  margin-bottom: 20px;
-  height: 30px;
-}
-
-.modal-footer {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.modal-default-button {
-  float: right;
-}
-
-/*
-  * The following styles are auto-applied to elements with
-  * transition="modal" when their visibility is toggled
-  * by Vue.js.
-  *
-  * You can easily play with the modal transition by editing
-  * these styles.
-  */
-.modal-enter {
-  opacity: 0;
-}
-
-.modal-leave-active {
-  opacity: 0;
-}
-
-.modal-enter .modal-container,
-.modal-leave-active .modal-container {
-  -webkit-transform: scale(1.1);
-  transform: scale(1.1);
-}
-
 </style>
-
-<script>
-
-export default {
-  name: 'app',
-  components: {
-  },
-  data() {
-    return {
-      window: {
-        width: 10,
-        height: 10
-      },
-      url:"",
-      pic:"",
-
-    }
-  },
-  computed: {
-    user() {
-      return this.$store.state.user;
-    },
-  },
-  async created() {
-    window.addEventListener('resize', this.handleResize)
-    this.handleResize();
-    await this.$store.dispatch("getUser");
-    await this.$store.dispatch("getMyPhotos");
-  },
-  destroyed() {
-    window.removeEventListener('resize', this.handleResize)
-  },
-  methods: {
-    handleResize() {
-      this.window.width = window.innerWidth;
-      this.window.height = window.innerHeight;
-    },
-    getImgUrl() {
-       return "https://picsum.photos/"+this.window.width+"/"+this.window.height+"/?random";
-      // return "https://picsum.photos/"+2500+"/"+1500;
-    },
-  },
-  async logout() {
-    try {
-      this.error = await this.$store.dispatch("logout");
-    } catch (error) {
-      console.log(error);
-    }
-  },
-}
-</script>

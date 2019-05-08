@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="comments">
 
 <div v-if="user">
 <h3>Add a Comment</h3>
@@ -8,18 +8,23 @@
     <br />
     <button type="submit">Comment</button>
   </form>
-  <h3>Comments</h3>
+  </div>
+  <div v-else>
+    <p>If you would like to comment on this photo, please register for an account or login.</p>
+    <!-- <router-link to="/register" class="pure-button">Register</router-link> or
+    <router-link to="/login" class="pure-button">Login</router-link> -->
+  </div>
+</br>
+  <div v-if="comment in photo.comments">
+    <h3>Comments</h3>
+  </div>
   <div v-for="comment in photo.comments">
     <hr>
-    <p>{{comment.addedComment}}</p>
-    <p><i>-- {{comment.addedName}},</i></p>
+    <p>{{comment.comment}}</p>
+    <p><i>-- {{comment.name}}</i></p>
   </div>
-</div>
-<div v-else>
-  <p>If you would like to comment on this photo, please register for an account or login.</p>
-  <router-link to="/register" class="pure-button">Register</router-link> or
-  <router-link to="/login" class="pure-button">Login</router-link>
-</div>
+
+
 </div>
 
 </div>
@@ -32,8 +37,8 @@ export default {
   name: 'Comments',
   data() {
     return{
-      addedName: 'addedName',
-      addedComment: 'addedComment',
+      addedName: '',
+      addedComment: '',
     }
   },
   computed: {
@@ -51,13 +56,7 @@ export default {
   methods: {
     async addComment() {
         try {
-          const formData = new FormData();
-          formData.append('id', this.$route.params.id);
-          formData.append('addedName', this.addedName);
-          formData.append('addedComment', this.addedComment);
-          //this.error = await this.$store.dispatch("addComment", formData);
-          //this.error = await this.$store.dispatch("addComment", this.$route.params.id);
-          this.error = await this.$store.dispatch("addComment", {id:this.$route.params.id, comment:this.addedComment});
+          this.error = await this.$store.dispatch("addComment", {id:this.$route.params.id, name:this.user.name, comment:this.addedComment});
           if (!this.error) {
             this.addedName = '';
             this.addedComment = '';
@@ -71,3 +70,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.comments{
+  margin-left: 1rem;
+  background-color: #F1F1F1;
+  border-radius: 1rem;
+  padding: 1rem;
+}
+</style>

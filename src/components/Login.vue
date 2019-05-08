@@ -7,20 +7,8 @@
           <h1 class="modal-title">Login</h1>
         </div>
         <div class="modal-body">
-          <!-- <p v-if="error" class="error">{{error}}</p>
-          <form @submit.prevent="upload">
-            <input v-model="title" placeholder="Title">
-            <p></p>
-            <textarea v-model="description" placeholder="Description"></textarea>
-            <p></p>
-            <input type="file" name="photo" @change="fileChanged">
-            <p></p>
-            <button type="button" @click="close" class="pure-button">Close</button>
-            <button type="submit" class="pure-button pure-button-secondary">Upload</button> -->
             <form @submit.prevent="login" class="pure-form pure-form-aligned">
             <fieldset>
-              <p class="pure-form-message-inline">All fields are required.</p>
-
               <div class="pure-control-group">
                 <label for="username">Username</label>
                 <input v-model="username" type="text" placeholder="Username">
@@ -32,6 +20,7 @@
               </div>
 
               <div class="pure-controls">
+                <button type="button" @click="close" class="pure-button pure-button-primary">Close</button>
                 <button type="submit" class="pure-button pure-button-primary">Submit</button>
               </div>
             </fieldset>
@@ -62,22 +51,18 @@
 
 <script>
 export default {
-  name: 'Uploader',
+  name: 'Login',
   props: {
     show: Boolean,
   },
   data() {
     return {
-      title: '',
-      description: '',
-      file: null,
+      username:'',
+      password:'',
       error: '',
     }
   },
   methods: {
-  fileChanged(event) {
-    this.file = event.target.files[0]
-  },
   close() {
     this.$emit('escape');
   },
@@ -87,29 +72,14 @@ export default {
         username: this.username,
         password: this.password
       });
-      if (this.error === "")
-        this.$router.push('mypage');
+      if (this.error === ""){
+        this.$emit('loginFinished');
+        // this.$router.push('mypage');
+      }
     } catch (error) {
       console.log(error);
     }
   },
-  async upload() {
-      try {
-        const formData = new FormData();
-        formData.append('photo', this.file, this.file.name);
-        formData.append('title', this.title);
-        formData.append('description', this.description);
-        this.error = await this.$store.dispatch("upload", formData);
-        if (!this.error) {
-          this.title = '';
-          this.description = '';
-          this.file = null;
-          this.$emit('uploadFinished');
-        }
-      } catch (error) {
-        console.log(error);
-      }
-}
 }
 };
 </script>

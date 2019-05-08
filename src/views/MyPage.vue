@@ -22,13 +22,13 @@
     <div class="header">
     <p></p></br>
       <div>
-        <h1>{{user.name}}</h1>
+        <!-- <h1>{{user.name}}</h1> -->
       </div>
       <p></p></br>
       <div>
         <p>
-          <a @click="toggleUpload"><i class="far fa-image"></i></a>
-          <a href="/" @click="logout"><i class="fas fa-sign-out-alt"></i></a>
+          <!-- <a @click="toggleUpload"><i class="far fa-image"></i></a> -->
+          <!-- <a href="/" @click="logout"><i class="fas fa-sign-out-alt"></i></a> -->
         </p>
       </div>
     </div>
